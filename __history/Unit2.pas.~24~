@@ -1,0 +1,116 @@
+unit Unit2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.FileCtrl, Vcl.StdCtrls, ShellApi, IOUtils;
+
+type
+  TForm2 = class(TForm)
+    DirectoryListBox1: TDirectoryListBox;
+    DriveComboBox1: TDriveComboBox;
+    FilterComboBox1: TFilterComboBox;
+    FileListBox1: TFileListBox;
+    Button1: TButton;
+    Переименовать: TButton;
+    Edit1: TEdit;
+    Button2: TButton;
+    DirectoryListBox2: TDirectoryListBox;
+    Label1: TLabel;
+    Button3: TButton;
+    Label2: TLabel;
+    Label3: TLabel;
+    Button4: TButton;
+    Edit3: TEdit;
+    Button5: TButton;
+    procedure FileListBox1DblClick(Sender: TObject);
+    procedure FileListBox2DblClick(Sender: TObject);
+    procedure ПереименоватьClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure DirectoryListBox2DblClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure DirectoryListBox2Change(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form2: TForm2;
+  S,S2:string;
+  myFile:TextFile;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm2.Button1Click(Sender: TObject);
+var N,N2:string;
+arreychat:array[0..255] of WideChar;
+arreychat2:array[0..255] of WideChar;
+begin
+  N:=ExtractFileName(S);
+  N2:=label1.Caption+'\'+N;
+  label3.Caption:=N2;
+  StringToWideChar(S,arreychat,255);
+  StringToWideChar(N2,arreychat2,255);
+  CopyFile(arreychat,arreychat2,true);
+end;
+
+procedure TForm2.Button2Click(Sender: TObject);
+begin
+DeleteFile(S);
+FileListBox1.Update;
+end;
+
+procedure TForm2.Button3Click(Sender: TObject);
+begin
+Form2.Update;
+end;
+
+procedure TForm2.Button4Click(Sender: TObject);
+
+begin
+if CreateDir(Label2.Caption+'\'+Edit3.Text) then
+ShowMessage('Папка успешно создана.')
+else
+ShowMessage('Ошибка: папка не создана.');
+end;
+
+procedure TForm2.Button5Click(Sender: TObject);
+begin
+ TDirectory.Delete(Label1.Caption, True);
+end;
+
+pprocedure TForm2.DirectoryListBox2Change(Sender: TObject);
+begin
+
+end;
+
+rocedure TForm2.DirectoryListBox2DblClick(Sender: TObject);
+begin
+S2:=FileListBox1.FileName;
+Label1.Caption:=S2;
+end;
+
+procedure TForm2.FileListBox1DblClick(Sender: TObject);
+begin
+  S:=FileListBox1.FileName;
+  Edit1.Text:=S;
+  FileListBox1.Update;
+end;
+
+procedure TForm2.ПереименоватьClick(Sender: TObject);
+begin
+AssignFile(myFile,S);
+Rename(myFile,Edit1.Text);
+CloseFile(myFile);
+FileListBox1.Update;
+end;
+
+end.
